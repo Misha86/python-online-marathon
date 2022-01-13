@@ -1,13 +1,23 @@
+def kthTerm(n, k) -> int:
+    """
+    [3**0] = > [1]
+    [1,        3**1, 3**1 + 1] = > [1, 3, 4]
+    [1, 3, 4,  3**2, 3**2 + 1, 3**2 + 3, 3**2 + 4] = > [1, 3, 4, 9, 10, 12, 13]
+    """
+    res = []
+    for i in range(k):
+        if len(res) > k:
+            break
+        for j in range(len(res) + 1):
+            if j == 0:
+                lis = n ** i
+            else:
+                lis = n ** i + res[j-1]
+            res.append(lis)
+            # if len(res) > k:
+            #     break
+    return res[k-1]
 
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print(kthTerm(30, 100))
