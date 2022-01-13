@@ -1,3 +1,6 @@
+"""1 question 1 sprint"""
+
+
 def kthTerm(n, k) -> int:
     """
     [3**0] = > [1]
@@ -14,10 +17,9 @@ def kthTerm(n, k) -> int:
             else:
                 lis = n ** i + res[j-1]
             res.append(lis)
-            # if len(res) > k:
-            #     break
     return res[k-1]
 
 
 if __name__ == '__main__':
-    print(kthTerm(30, 100))
+    result = kthTerm(3, 4)
+    print(result)
