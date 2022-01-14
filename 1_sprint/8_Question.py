@@ -1,5 +1,5 @@
 """8 question 1 sprint"""
-"""a = [2, 2, 1, 3, 4, 1]"""
+
 
 def studying_hours(a: list) -> int:
     """
@@ -24,6 +24,6 @@ def studying_hours(a: list) -> int:
 
 
 if __name__ == '__main__':
-    a = [2, 2, 10, 13, 18, 1, 3, 4, 1]
+    a = [2, 2, 1, 3, 4, 5, 5]
     res = studying_hours(a)
     print(res)
