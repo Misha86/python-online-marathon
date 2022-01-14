@@ -19,8 +19,9 @@ def Cipher_Zeroes(N: str):
             points += 1
         else:
             points -= 1
-    points_bin = int(bin(points).partition('b')[-1])
-    return points_bin
+    # points_bin = int(bin(points).partition('b')[-1])
+    # return points_bin
+    return int(format(points, 'b'))
 
 
 if __name__ == '__main__':
