@@ -3,20 +3,18 @@
 
 def kthTerm(n, k) -> int:
     """
-    [3**0] = > [1]
-    [1,        3**1, 3**1 + 1] = > [1, 3, 4]
-    [1, 3, 4,  3**2, 3**2 + 1, 3**2 + 3, 3**2 + 4] = > [1, 3, 4, 9, 10, 12, 13]
+    n1, n1+n0,
+    n2, n2+n0, n2+n1, n2+n1+n0,
+    n3, n3+n0, n3+n1, n3+n1+n0, n3+n2, n3+n2+n1, n3+n2+n1+n0]
     """
     res = []
     for i in range(k):
         if len(res) > k:
             break
-        for j in range(len(res) + 1):
-            if j == 0:
-                lis = n ** i
-            else:
-                lis = n ** i + res[j-1]
-            res.append(lis)
+        res_copy = list(res)
+        res.append(n**i)
+        for j in res_copy:
+            res.append(j + n**i)
     return res[k-1]
 
 
