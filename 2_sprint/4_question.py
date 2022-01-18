@@ -4,10 +4,10 @@ import re
 
 
 def pretty_message(s: str) -> str:
-    str_re = re.sub(r'([a-z])\1+', r'\1', s)
-    str_re1 = re.sub(r'([a-z]{2,3})\1+', r'\1', str_re)
-
-    return str_re1
+    # str_re = re.sub(r'([a-z])\1+', r'\1', s)
+    # str_re1 = re.sub(r'([a-z]{2,3})\1+', r'\1', str_re)
+    str_re = re.sub(r'(([a-z])|([a-z]{2,3}))\1+', r'\1', s)
+    return str_re
 
 
 if __name__ == '__main__':
