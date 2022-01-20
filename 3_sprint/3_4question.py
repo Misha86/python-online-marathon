@@ -1,8 +1,18 @@
 """4 question 3 sprint"""
-import re
 
+
+def divisor(num):
+    for i in range(1, num + 1):
+        if num % i == 0:
+            yield i
+    while True:
+        yield None
 
 
 if __name__ == '__main__':
-    # val1 = create_account("123", "qQ1!45", ["1", "word"])
-    # # check1 = val1("Qwerty1_", ["1", "word"])
+    three = divisor(3)
+    print(next(three))
+    print(next(three))
+    print(next(three))
+    print(next(three))
+
