@@ -3,7 +3,9 @@ import re
 
 
 def create_account(user_name: str, password: str, secret_words: list):
-    match = re.match(r'^(?=.*[0-9].*)(?=.*[@#$*%^!&+=_].*)(?=.*[a-z].*)(?=.*[A-Z].*)[0-9a-zA-Z@#*$%^!&+=_]{6,}$',
+    # match = re.match(r'^(?=.*[0-9].*)(?=.*[@#$*%^!&+=_].*)(?=.*[a-z].*)(?=.*[A-Z].*)[0-9a-zA-Z@#*$%^!&+=_]{6,}$',
+    #                  password)
+    match = re.match(r'^(?=.*[0-9])(?=.*[\W_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z\W_]{6,}$',
                      password)
     if not match:
         raise ValueError
