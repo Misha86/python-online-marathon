@@ -3,10 +3,9 @@
 
 def logger(f):
     def inner(*args, **kwargs):
-        args_value = [str(i) for i in args]
-        kwargs_values = [str(k) for k in kwargs.values()]
+        args_kwargs = ", ".join(list(map(str, args)) + list(map(str, kwargs.values())))
         res = f(*args, **kwargs)
-        print(f'Executing of function {f.__name__} with arguments {", ".join(args_value+kwargs_values)}...')
+        print(f'Executing of function {f.__name__} with arguments {args_kwargs}...')
         return res
     return inner
 
@@ -19,17 +18,9 @@ def print_arg(arg):
 @logger
 def concat(*args, **kwargs):
     count = ''
-    kw = kwargs.values()
-    if len(args) == 1:
-        count += str(args[0])
-    else:
-        for a in args:
-            count += str(a)
-    if len(kw) == 1:
-        count += str(kw[0])
-    else:
-        for k in kw:
-            count += str(k)
+    ar_kw = list(map(str, args)) + list(map(str, kwargs.values()))
+    for ak in ar_kw:
+        count += ak
     return count
 
 
