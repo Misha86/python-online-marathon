@@ -3,9 +3,8 @@ from random import choice
 
 
 def randomWord(data: list) -> str:
-    if not data:
-        while True:
-            yield None
+    while not data:
+        yield None
     data_copy = data[:]
     while True:
         item = choice(data_copy)
