@@ -3,15 +3,16 @@ from random import choice
 
 
 def randomWord(data: list) -> str:
-    while not data:
-        yield None
     data_copy = data[:]
     while True:
-        item = choice(data_copy)
-        data_copy.remove(item)
-        yield item
-        if not data_copy:
-            data_copy += data[:]
+        if not data:
+            yield None
+        else:
+            item = choice(data_copy)
+            data_copy.remove(item)
+            yield item
+            if not data_copy:
+                data_copy += data[:]
 
 
 if __name__ == '__main__':
