@@ -1,5 +1,6 @@
 """3 question 3 sprint"""
 import re
+import collections
 
 
 def create_account(user_name: str, password: str, secret_words: list):
@@ -12,16 +13,23 @@ def create_account(user_name: str, password: str, secret_words: list):
 
     def check(password_check: str, secret_words_check: list):
         if password == password_check and len(secret_words) == len(secret_words_check):
-            m = 0
             secret_words_copy = secret_words[:]
-            for c in secret_words_check:
-                if c in secret_words_copy:
-                    secret_words_copy.remove(c)
-                elif not m:
-                    m += 1
-                else:
-                    return False
-            return True
+            check_l = [secret_words_copy.remove(x) if x in secret_words_copy else False for x in secret_words_check]
+            count_false = collections.Counter(check_l)[False]
+            if count_false > 1:
+                return False
+            else:
+                return True
+            # m = 0
+            # secret_words_copy = secret_words[:]
+            # for c in secret_words_check:
+            #     if c in secret_words_copy:
+            #         secret_words_copy.remove(c)
+            #     elif not m:
+            #         m += 1
+            #     else:
+            #         return False
+            # return True
         else:
             return False
     return check
