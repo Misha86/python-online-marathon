@@ -9,11 +9,11 @@ class Pizza:
 
     def __init__(self, ingredients: list):
         self.ingredients = ingredients
-        self._order_number = self.__set_order_number()
 
     @property
     def order_number(self):
-        return self._order_number
+        self.__class__.__order_number += 1
+        return self.__class__.__order_number
 
     @classmethod
     def garden_feast(cls):
@@ -26,11 +26,6 @@ class Pizza:
     @classmethod
     def hawaiian(cls):
         return cls(["ham", "pineapple"])
-
-    @classmethod
-    def __set_order_number(cls):
-        cls.__order_number += 1
-        return cls.__order_number
 
 
 if __name__ == '__main__':
