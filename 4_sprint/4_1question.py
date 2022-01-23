@@ -11,10 +11,10 @@ class Employee:
         self.lastname = lastname
         self.salary = salary
 
-    @staticmethod
-    def from_string(s):
+    @classmethod
+    def from_string(cls, s):
         firstname, lastname, salary = s.split('-')
-        return Employee(firstname, lastname, int(salary))
+        return cls(firstname, lastname, int(salary))
 
 
 if __name__ == '__main__':

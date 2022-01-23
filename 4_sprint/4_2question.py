@@ -15,21 +15,22 @@ class Pizza:
     def order_number(self):
         return self._order_number
 
-    @staticmethod
-    def garden_feast():
-        return Pizza(["spinach", "olives", "mushroom"])
+    @classmethod
+    def garden_feast(cls):
+        return cls(["spinach", "olives", "mushroom"])
 
-    @staticmethod
-    def meat_festival():
-        return Pizza(["beef", "meatball", "bacon"])
+    @classmethod
+    def meat_festival(cls):
+        return cls(["beef", "meatball", "bacon"])
 
-    @staticmethod
-    def hawaiian():
-        return Pizza(["ham", "pineapple"])
+    @classmethod
+    def hawaiian(cls):
+        return cls(["ham", "pineapple"])
 
-    def __set_order_number(self):
-        self.__class__.__order_number += 1
-        return self.__class__.__order_number
+    @classmethod
+    def __set_order_number(cls):
+        cls.__order_number += 1
+        return cls.__order_number
 
 
 if __name__ == '__main__':
