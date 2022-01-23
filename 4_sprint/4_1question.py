@@ -13,8 +13,8 @@ class Employee:
 
     @staticmethod
     def from_string(s):
-        attr_list = s.split('-')
-        return Employee(attr_list[0], attr_list[1], int(attr_list[2]))
+        firstname, lastname, salary = s.split('-')
+        return Employee(firstname, lastname, int(salary))
 
 
 if __name__ == '__main__':
