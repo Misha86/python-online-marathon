@@ -12,7 +12,7 @@ def randomWord(data: list) -> str:
             data_copy.remove(item)
             yield item
             if not data_copy:
-                data_copy += data[:]
+                data_copy = data[:]
 
 
 if __name__ == '__main__':
