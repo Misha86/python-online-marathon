@@ -1,37 +1,37 @@
 """2 question 4 sprint"""
+from enum import Enum
+
+
+class TypePizza(Enum):
+    """Ingredients for different type of pizza"""
+    garden_feast = ["spinach", "olives", "mushroom"]
+    meat_festival = ["beef", "meatball", "bacon"]
+    hawaiian = ["ham", "pineapple"]
 
 
 class Pizza:
     """
     Order Pizza
     """
-    __order_numbers = {}
-    __count = 0
+    __number = 1
 
     def __init__(self, ingredients: list):
         self.ingredients = ingredients
-        self.__set_order_number()
-        self.__order_numbers[self] = self.__count
+        self.order_number = self.__number
 
-    @classmethod
-    def __set_order_number(cls):
-        cls.__count += 1
-
-    @property
-    def order_number(self):
-        return self.__order_numbers[self]
+        self.__class__.__number += 1
 
     @classmethod
     def garden_feast(cls):
-        return cls(["spinach", "olives", "mushroom"])
+        return cls(TypePizza.garden_feast.value)
 
     @classmethod
     def meat_festival(cls):
-        return cls(["beef", "meatball", "bacon"])
+        return cls(TypePizza.meat_festival.value)
 
     @classmethod
     def hawaiian(cls):
-        return cls(["ham", "pineapple"])
+        return cls(TypePizza.hawaiian.value)
 
 
 if __name__ == '__main__':
