@@ -13,13 +13,17 @@ class Pizza:
     """
     Order Pizza
     """
-    __number = 1
+    __count_orders = 0
 
     def __init__(self, ingredients: list):
         self.ingredients = ingredients
-        self.order_number = self.__number
 
-        self.__class__.__number += 1
+        self.__class__.__count_orders += 1
+        self._order_number = self.__count_orders
+
+    @property
+    def order_number(self):
+        return self._order_number
 
     @classmethod
     def garden_feast(cls):
