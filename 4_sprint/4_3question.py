@@ -9,24 +9,24 @@ class Employee:
     def __init__(self, full_name=None, **kwargs):
         self.full_name = full_name
         self.__dict__.update(kwargs)
+        self._split_full_name()
 
     def _split_full_name(self):
-        if self.full_name:
-            spited_full_name = dict(zip(("firstname", "lastname"), (self.full_name.split())))
-            return spited_full_name
-        return None
+        names = ("_firstname", "_lastname")
+        splitted_full_name = dict(zip(names, (self.full_name.split()))) if self.full_name else dict.fromkeys(names)
+        self.__dict__.update(splitted_full_name)
 
     @property
     def name(self):
-        return self._split_full_name().get('firstname')
+        return self._firstname
 
     @property
     def lastname(self):
-        return self._split_full_name().get('lastname')
+        return self._lastname
 
 
 if __name__ == '__main__':
-    john = Employee("John Doe")
+    john = Employee()
     mary = Employee("Mary Major", salary=120000)
     richard = Employee("Richard Roe", salary=110000, height=178)
     giancarlo = Employee("Giancarlo Rossi", salary=115000, height=182, nationality="Italian")
