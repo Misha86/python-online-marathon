@@ -24,6 +24,24 @@ def check_positive(number):
         return m
 
 
+# class MyError(Exception):
+#     """Raise exception for negative numbers"""
+#     pass
+#
+#
+# def check_positive(number):
+#     try:
+#         float_number = float(number)
+#         if float_number > 0:
+#             return f"You input positive number: {float_number}"
+#         else:
+#             raise MyError(f"You input negative number: {float_number}. Try again.")
+#     except ValueError:
+#         return "Error type: ValueError!"
+#     except MyError as m:
+#         return m
+
+
 if __name__ == '__main__':
     print(check_positive(10))
     print(check_positive(-10))
