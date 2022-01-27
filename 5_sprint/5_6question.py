@@ -1,22 +1,20 @@
-"""5 question 5 sprint"""
-import re
+"""6 question 5 sprint"""
+import calendar
 
 
-def valid_email(email):
+def day_of_week(day):
     try:
-        match = re.fullmatch(r"[a-z]+@[a-z.]+", email)
-        if match:
-            return "Email is valid"
+        int_day = int(day)
+        if int_day in range(1, 8):
+            return calendar.day_name[int_day-1]
         else:
-            return "Email is not valid"
-    except Exception as e:
-        return e
+            return "There is no such day of the week! Please try again."
+    except ValueError:
+        return "You did not enter a number! Please try again."
 
 
 if __name__ == '__main__':
-    print(valid_email("trafik@ukr.tel.com"))  # output:   "Email is valid"
-    print(valid_email("trafik@ukr_tel.com"))  # output:   "Email is not valid"
-    print(valid_email("tra@fik@ukr.com"))  # output:   "Email is not valid"
-    print(valid_email("ownsite@our.c0m"))  # output:   "Email is not valid"
-    print(valid_email(1111))  # output:   "Email is not valid"
+    print(day_of_week(2))  # output:   "Tuesday"
+    print(day_of_week(11))  # output:  "There is no such day of the week! Please try again."
+    print(day_of_week("Monday"))  # output:   "You did not enter a number! Please try again."
 
