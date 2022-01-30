@@ -6,16 +6,16 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(level
 
 
 def parse_user(output_file, *input_files):
+    def get_name(dct):
+        if "name" in dct and dct["name"] not in users_name_list:
+            users_name_list.append(dct["name"])
+            users_list.append(dct)
     with open(output_file, "w") as res_file:
         users_name_list = []
         users_list = []
         for file in input_files:
             try:
                 with open(file, 'r') as f:
-                    def get_name(dct):
-                        if "name" in dct and dct["name"] not in users_name_list:
-                            users_name_list.append(dct["name"])
-                            users_list.append(dct)
                     json.load(f, object_hook=get_name)
             except FileNotFoundError:
                 logging.error(f"File {file} doesn't exist")
