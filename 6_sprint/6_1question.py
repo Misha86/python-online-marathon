@@ -13,7 +13,7 @@ def find(file, key):
                     passwords_set.update(d)
                 else:
                     passwords_set.add(d)
-        load_f = json.load(f, object_hook=get_password)
+        json.load(f, object_hook=get_password)
         return list(passwords_set)
 
 
