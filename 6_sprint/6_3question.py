@@ -17,12 +17,15 @@ user_schema = {
 
 department_schema = {
     "owner": "department",
-    "type": "object",
-    "properties": {
-        "id": {"type": "number"},
-        "name": {"type": "string"},
-    },
-    "required": ["id", "name"]
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "number"},
+            "name": {"type": "string"},
+        },
+        "required": ["id", "name"]
+    }
 }
 
 
@@ -47,7 +50,7 @@ def user_with_department(csv_file, user_json, department_json):
         writer = csv.DictWriter(f, fieldnames=["name", "department"])
         writer.writeheader()
         try:
-            department_json_load = [validate_json(i, department_schema) for i in json.load(department_file)]
+            department_json_load = validate_json(json.load(department_file), department_schema)
 
             def get_user_department(dct):
                 validate_json(dct, user_schema)
@@ -73,16 +76,16 @@ def user_with_department(csv_file, user_json, department_json):
 
 
 if __name__ == '__main__':
-    user_instance = {
-        "id": 1,
-        "name": "userName",
-        "department_id": 1
-    }
-
-    department_instance = {
-        "id": 1,
-        "name": "departmentName",
-    }
-    print(validate_json(user_instance, user_schema))
-    print(validate_json(department_instance, department_schema))
+    # user_instance = {
+    #     "id": 1,
+    #     "name": "userName",
+    #     "department_id": 1
+    # }
+    #
+    # department_instance = {
+    #     "id": 1,
+    #     "name": "departmentName",
+    # }
+    # print(validate_json(user_instance, user_schema))
+    # print(validate_json(department_instance, department_schema))
     print(user_with_department('csv_file.csv', 'user_json.json', 'department_json.json'))
