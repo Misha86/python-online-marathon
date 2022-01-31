@@ -1,8 +1,8 @@
 """3 question 6 sprint"""
 import json
-import jsonschema
 from jsonschema import validate
 import csv
+
 
 user_schema = {
     "owner": "user",

@@ -5,8 +5,8 @@ from enum import Enum
 
 
 class FileType(Enum):
-    JSON = json
-    BYTE = pickle
+    JSON = {"module": json, "mode": "w"}
+    BYTE = {"module": pickle, "mode": "bw"}
 
 
 class SerializeManager:
@@ -15,15 +15,14 @@ class SerializeManager:
         self._fileType = fileType
 
     def __enter__(self):
-        self.__mode = 'w' if self._fileType.name == 'JSON' else 'bw'
-        self.__file = open(self._filename, self.__mode)
+        self.__file = open(self._filename, self._fileType.value["mode"])
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__file.close()
 
     def serialize(self, object):
-        self._fileType.value.dump(object, self.__file)
+        self._fileType.value["module"].dump(object, self.__file)
 
 
 def serialize(object, filename, fileType):
