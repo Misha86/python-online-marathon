@@ -1,10 +1,5 @@
 """4 question 6 sprint"""
 import json
-from json import JSONEncoder
-
-
-import json
-from json import JSONEncoder
 
 
 class Student:
