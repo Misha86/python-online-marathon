@@ -1,6 +1,5 @@
 """2 question 7 sprint"""
 from __future__ import annotations
-from abc import ABC, abstractmethod
 
 
 class Goods:
