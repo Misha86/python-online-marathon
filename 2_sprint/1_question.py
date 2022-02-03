@@ -16,7 +16,21 @@ def double_string(d: list) -> int:
     return total_count
 
 
+def double_string_mentor(data: list) -> int:
+    double = [i+j for i in data for j in data]
+    count = 0
+    for i in data:
+        if i in double:
+            count += 1
+    return count
+
+
 if __name__ == '__main__':
-    data = ['aa', 'aaaa', 'aaaaaaaa', 'aaaa', 'qwer', 'qweraaaa']
+    data = ['aa', 'aa', 'aaaa', 'aaaaaaaa', 'aaaa', 'qwer']
     result = double_string(data)
     print(result)
+
+    data_m = ['aa', 'aa', 'aaaa', 'aaaaaaaa', 'aaaa', 'qwer']
+    result_m = double_string_mentor(data_m)
+    print(result_m)
+
