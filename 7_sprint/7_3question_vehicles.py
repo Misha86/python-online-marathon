@@ -43,16 +43,16 @@ class Adapter:
     def __init__(self, obj, **adapted_methods):
         """We set the adapted methods in the object's dict"""
         self.obj = obj
-        self.__dict__.update(**adapted_methods, **self.obj.__dict__)
+        self.__dict__.update(**adapted_methods)
 
     def __getattr__(self, attr):
         """All non-adapted calls are passed to the object"""
-        if attr not in self.__dict__:
-            pass
+        if attr in self.obj.__dict__:
+            return self.obj.__dict__[attr]
 
     def original_dict(self):
         """Print original object dict"""
-        print(self.__dict__['obj'])
+        print(self.obj.__dict__)
 
 
 if __name__ == '__main__':
@@ -65,6 +65,7 @@ if __name__ == '__main__':
     objects.append(Adapter(car, wheels=car.FourWheeler))
     for obj in objects:
         print("A {0} is a {1} vehicle".format(obj.name, obj.wheels()))
+
 
 
 
