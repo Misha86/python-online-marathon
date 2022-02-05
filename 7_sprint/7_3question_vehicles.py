@@ -47,8 +47,7 @@ class Adapter:
 
     def __getattr__(self, attr):
         """All non-adapted calls are passed to the object"""
-        if attr in self.obj.__dict__:
-            return self.obj.__dict__[attr]
+        return getattr(self.obj, attr)
 
     def original_dict(self):
         """Print original object dict"""

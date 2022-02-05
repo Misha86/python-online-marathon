@@ -7,9 +7,9 @@ class LeafElement:
         """Takes the first positional argument and assigns to member variable "position"."""
         self.position = args[0]
 
-    def showDetails(self, t=""):
+    def showDetails(self):
         """Prints the position of the child element."""
-        print(t, self.position, sep="")
+        print("\t", self.position, sep="")
 
 
 class CompositeElement:
@@ -30,27 +30,15 @@ class CompositeElement:
         children elements "children"."""
         self._children.remove(child)
 
-    def showDetails(self, t='\t'):
+    def showDetails(self):
         """Prints the details of the component element first. Then,
         iterates over each of its children, prints their details by
         calling their showDetails() method."""
-        # for child in self._children:
-        #     if isinstance(child, CompositeElement):
-        #         print("\t", child.position, sep="")
-        #         for c in child._children:
-        #             print("\t\t", end="")
-        #             c.showDetails()
-        #     else:
-        #         print("\t", end="")
-        #         child.showDetails()
+
         print(self.position)
         for child in self._children:
-            if isinstance(child, CompositeElement):
-                print(t, end="")
-                child.showDetails(t)
-            else:
-                print(t, end="")
-                child.showDetails(t)
+            print("\t", end="")
+            child.showDetails()
 
 
 if __name__ == '__main__':
