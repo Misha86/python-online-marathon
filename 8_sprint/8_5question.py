@@ -1,5 +1,6 @@
 """5 question 8 sprint"""
 import unittest
+from unittest.mock import patch, PropertyMock
 
 
 class Worker2:
@@ -70,7 +71,7 @@ class Worker:
         if self.salary > 1000:
             for i, value in enumerate(self.data[1:], 1):
                 current_percents = value[1]
-                prev_percents = self.data[i - 1][1]
+                prev_percents = self.data[i-1][1]
                 current_start_range = value[0][0]
                 prev_start_range = self.data[i - 1][0][0]
                 calculate = prev_percents * (current_start_range - prev_start_range)
@@ -105,14 +106,20 @@ class WorkerTest(unittest.TestCase):
     def test_get_tax_value(self):
         self.assertEqual(self.worker.get_tax_value(), 40050.0)
 
+    def test_salary_property_mock(self):
+        with patch('__main__.Worker.salary', new_callable=PropertyMock) as mock_salary:
+            mock_salary.return_value = 1000
+            self.assertEqual(self.worker.salary, 1000)
+
     def tearDown(self) -> None:
         self.worker = None
 
 
 if __name__ == '__main__':
-    worker = Worker("Misha", 100000)
-    print(worker.get_tax_value())
-
+    # worker = Worker("Misha", 100000)
+    # print(worker.get_tax_value())
+    #
     unittest.main()
+
 
 
