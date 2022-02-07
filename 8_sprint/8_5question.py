@@ -1,18 +1,8 @@
 """5 question 8 sprint"""
 import unittest
 
-#
-# s0 = 0                                                                                                                                        # 1000 - 0 %
-# s1= 0.1*(1001 - 1000)                                                                                                                # 1001 - 3000 - 10 %
-# s_4000 = 0.1*(3001 - 1001)                                                                                           # 3001 - 5000 - 15 %
-# s_6000 = 0.15*(5001 - 3001) + 0.1*(3001 - 1001)                                                                      # 5001 - 10000 - 21 %
-# s_12000 = 0.21*(10001 - 5001) + 0.15*(5001 - 3001) + 0.1*(3001 - 1001)                                              # 10001 - 20000 - 30 %
-# s_12000 = 0.3 * (20001 - 10001) + 0.21 * (10001 - 5001) + 0.15 * (5001 - 3001) + 0.1 * (3001 - 1001)                                       # 20001 - 50000 - 40 %
-# s_12000 = 0.40 * (50000 - 20001) + 0.3 * (20001 - 10001) + 0.21 * (10001 - 5001) + 0.15 * (5001 - 3001) + 0.1 * (3001 - 1001)              # 20001 - 50000 - 40 %
-# #                                                                                                                                          # 50000 - 47 %
 
-
-class Worker:
+class Worker2:
     data = {
         (0, 1001): {"percents": 0, "rest_taxes": 0},
         (1001, 3001): {"percents": 0.1, "rest_taxes": 0},
@@ -22,6 +12,47 @@ class Worker:
         (20001, 50001): {"percents": 0.40, "rest_taxes": 4550},
         (50001, pow(10, 20)): {"percents": 0.47, "rest_taxes": 16550.47}
     }
+
+    def __init__(self, name, salary=0):
+        self.name = name
+        self._salary = self.validate_salary(salary)
+
+    @classmethod
+    def validate_salary(cls, salary):
+        if salary < 0:
+            raise ValueError
+        else:
+            return float(salary)
+
+    def get_tax_value(self):
+        taxes = 0
+        for key, value in self.data.items():
+            if self.salary in range(*key):
+                subtraction = self.salary - key[0] if self.salary != key[0] else 1
+                taxes += value["percents"]*subtraction + value['rest_taxes']
+                break
+        return float(taxes)
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        self._salary = self.validate_salary(value)
+
+
+class Worker:
+
+    data = [
+        ((1001,), 0),
+        ((1001, 3001), 0.1),
+        ((3001, 5001), 0.15),
+        ((5001, 10001), 0.21),
+        ((10001, 20001), 0.30),
+        ((20001, 50001), 0.40),
+        ((50001, 10**10), 0.47)
+    ]
 
     def __init__(self, name, salary=0):
         self.name = name
@@ -36,12 +67,20 @@ class Worker:
 
     def get_tax_value(self):
         taxes = 0
-        for key, value in self.data.items():
-            if self.salary in range(*key):
-                differens = self.salary - key[0] if self.salary != key[0] else 1
-                taxes += value["percents"]*differens + value['rest_taxes']
-                break
-        return float(taxes)
+        if self.salary > 1000:
+            for i, value in enumerate(self.data[1:], 1):
+                current_percents = value[1]
+                prev_percents = self.data[i - 1][1]
+                current_start_range = value[0][0]
+                prev_start_range = self.data[i - 1][0][0]
+                calculate = prev_percents * (current_start_range - prev_start_range)
+                if self.salary not in range(*value[0]):
+                    taxes += calculate
+                else:
+                    subtraction = self.salary - current_start_range if self.salary != current_start_range else 1
+                    taxes += current_percents * subtraction + calculate
+                    break
+        return float(round(taxes) if self.salary >= 100000 else taxes)
 
     @property
     def salary(self):
@@ -71,7 +110,7 @@ class WorkerTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    worker = Worker("Misha", 2000)
+    worker = Worker("Misha", 100000)
     print(worker.get_tax_value())
 
     unittest.main()
