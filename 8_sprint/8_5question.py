@@ -54,17 +54,17 @@ class Worker:
 
 class WorkerTest(unittest.TestCase):
     def setUp(self):
-        self.worker = Worker("Misha", 1001)
+        self.worker = Worker("Misha", 100000)
 
     @unittest.expectedFailure
     def test_validate_salary(self):
         self.worker.salary = -1000
 
     def test_salary_property(self):
-        self.assertEqual(self.worker.salary, 1001)
+        self.assertEqual(self.worker.salary, 100000)
 
     def test_get_tax_value(self):
-        self.assertEqual(self.worker.get_tax_value(), 0.1)
+        self.assertEqual(self.worker.get_tax_value(), 40050.0)
 
     def tearDown(self) -> None:
         self.worker = None
