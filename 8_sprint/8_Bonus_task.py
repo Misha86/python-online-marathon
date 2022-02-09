@@ -16,22 +16,25 @@ class Role(Enum):
 class Subject:
     subjects = []
 
-    def __init__(self, title, id=None):
+    def __init__(self, title):
         self.title = title
-        self.id = self._set_id(id)
+        self._set_id()
         self.subjects.append(self)
 
     @classmethod
-    def create_subject(cls, title, id):
-        return cls(title, id)
+    def create_subject(cls, title, id=None):
+        obj = cls(title=title)
+        if id:
+            obj.id = obj._set_id(id)
+        return obj
 
-    def _set_id(self, id):
-        if self.subjects:
-            exist_id = [subject.id for subject in self.subjects if id == subject.id]
-            if not exist_id:
-                new_id = ''.join([random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
-                return new_id
-        return id
+    def _set_id(self, id=None):
+        exist_id = [subject.id for subject in self.subjects if id == subject.id]
+        if id is None or exist_id:
+            self.id = uuid.UUID(uuid.uuid4().hex)
+        else:
+            self.id = uuid.UUID(id)
+        return self.id
 
 
 class Score:
@@ -49,12 +52,12 @@ class Score:
 class User:
     users = []
 
-    def __init__(self, username, password, role, id=None):
+    def __init__(self, username, password, role):
         self.username = username
         self.password = password
         self.role = role
-        self.id = self._set_id(id)
         self.score_list = []
+        self._set_id()
         self.users.append(self)
         self.validate_password(self.password)
 
@@ -63,27 +66,30 @@ class User:
 
     @classmethod
     def create_user(cls, username, password, role, id=None):
-        return cls(username, password, role, id)
-
-    def _set_id(self, id):
-        exist_id = [subject.id for subject in self.users if id == subject.id]
-        if id is None and not exist_id:
-            return uuid.UUID(uuid.uuid4().hex)
-        else:
-            return uuid.UUID(id)
-
-    def add_score_for_subject(self, subject: Subject, score: Score):
-        self.score_list.append({subject.title: score})
-        return self.score_list
+        obj = cls(username, password, role)
+        if id:
+            obj.id = obj._set_id(id)
+        return obj
 
     @classmethod
     def validate_password(cls, password):
-        match = re.match(r'^(?=.*[0-9])(?=.*[\W_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z\W_]{6,}$',
-                         password)
+        match = re.match(r'^(?=.*[0-9])(?=.*[\W_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z\W_]{6,}$', password)
         if match:
             return password
         else:
             raise PasswordValidationException("Invalid password")
+
+    def _set_id(self, id=None):
+        exist_id = [user.id for user in self.users if id == user.id]
+        if id is None or exist_id:
+            self.id = uuid.UUID(uuid.uuid4().hex)
+        else:
+            self.id = uuid.UUID(id)
+        return self.id
+
+    def add_score_for_subject(self, subject: Subject, score: Score):
+        self.score_list.append({subject.title: score})
+        return self.score_list
 
 
 class NonUniqueException(Exception):
@@ -122,7 +128,7 @@ def get_users_with_grades(users_json, subjects_json, grades_json):
             if dct["user_id"] == user.id.hex:
                 for subject in subjects:
                     if dct["subject_id"] == subject["id"]:
-                        user.add_score_for_subject(Subject(**subject), dct['score'])
+                        user.add_score_for_subject(Subject.create_subject(**subject), dct['score'])
             else:
                 return dct
     with open(users_json) as u_file, open(subjects_json) as s_file, open(grades_json) as g_file:
@@ -171,6 +177,12 @@ class UserEncoder(json.JSONEncoder):
         return updated_user
 
 
+class SubjectEncoder(json.JSONEncoder):
+    def default(self, subject):
+        subject.id = subject.id.hex
+        return subject.__dict__
+
+
 def users_to_json(users, json_file):
     with open(json_file, "w") as f:
         json.dump(users, f, cls=UserEncoder, indent=4)
@@ -178,7 +190,7 @@ def users_to_json(users, json_file):
 
 def subjects_to_json(subjects, json_file):
     with open(json_file, "w") as f:
-        json.dump(subjects, f, default=lambda o: o.__dict__, indent=4)
+        json.dump(subjects, f, cls=SubjectEncoder, indent=4)
 
 
 def grades_to_json(users, subjects, json_file):
@@ -190,7 +202,7 @@ def grades_to_json(users, subjects, json_file):
                 get_subject_id = (s.id for s in subjects if s.title == score_data[0][0])
                 subject_id = next(get_subject_id, None)
                 if subject_id:
-                    scores_.append(Score(score_data[0][1], user.id.hex, subject_id))
+                    scores_.append(Score(score_data[0][1], user.id.hex, subject_id.hex))
 
     with open(json_file, "w") as f:
         json.dump(scores_, f, default=lambda o: o.__dict__, indent=4)
@@ -198,6 +210,14 @@ def grades_to_json(users, subjects, json_file):
 
 if __name__ == '__main__':
     users = get_users_with_grades("users.json", "subjects.json", "grades.json")
+    subjects = get_subjects_from_json("subjects.json")
     mentor = User.create_user("Mentor", "!1qQ456", Role.Mentor)
     add_user(mentor, users)
-    print(get_grades_for_user("Mentor", users[1], users))
+    user2 = User.create_user("Second", "Password_0", Role.Trainee)
+    add_user(user2, users)
+    user2.add_score_for_subject(subjects[1], Score.B)
+    subject = Subject("New Subject")
+    add_subject(subject, subjects)
+    users[0].add_score_for_subject(subject, Score.D)
+
+    grades_to_json(users, subjects, "grades_2.json")
