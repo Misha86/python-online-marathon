@@ -26,13 +26,13 @@ class ParserTest(unittest.TestCase):
         self.search_string = "texts"
 
     def test_count_string(self):
-        with patch('__main__.open', mock_open(read_data=self.str_f)) as file:
+        with patch('builtins.open', mock_open(read_data=self.str_f)) as file:
             result = self.file_parser(file, self.search_string)
             self.assertEqual(result, "Found 2 strings")
             file.assert_called_once()
 
     def test_replace_string(self):
-        with patch('__main__.open', mock_open(read_data=self.str_f)) as file:
+        with patch('builtins.open', mock_open(read_data=self.str_f)) as file:
             result = self.file_parser(file, self.search_string, "No data")
             self.assertEqual(result, "Replaced 2 strings")
             file.assert_called_once()
@@ -50,6 +50,6 @@ class ParserTest(unittest.TestCase):
 
 if __name__ == '__main__':
     print(file_parser("grades.json", "subject_id"))
-    unittest.main(verbosity=2)
+    # unittest.main(verbosity=2)
 
 
