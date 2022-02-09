@@ -31,7 +31,7 @@ class Subject:
     def _set_id(self, id=None):
         exist_id = [subject.id for subject in self.subjects if id == subject.id]
         if id is None or exist_id:
-            self.id = uuid.UUID(uuid.uuid4().hex)
+            self.id = uuid.uuid4()
         else:
             self.id = uuid.UUID(id)
         return self.id
@@ -82,7 +82,7 @@ class User:
     def _set_id(self, id=None):
         exist_id = [user.id for user in self.users if id == user.id]
         if id is None or exist_id:
-            self.id = uuid.UUID(uuid.uuid4().hex)
+            self.id = uuid.uuid4()
         else:
             self.id = uuid.UUID(id)
         return self.id
@@ -131,11 +131,12 @@ def get_users_with_grades(users_json, subjects_json, grades_json):
                         user.add_score_for_subject(Subject.create_subject(**subject), dct['score'])
             else:
                 return dct
+
     with open(users_json) as u_file, open(subjects_json) as s_file, open(grades_json) as g_file:
         users = json.load(u_file, object_hook=get_user)
         subjects = json.load(s_file)
         json.load(g_file, object_hook=get_users_grades)
-        return users
+    return users
 
 
 def add_user(user: User, users: List[User]):
@@ -155,15 +156,15 @@ def add_subject(subject, subjects):
 
 
 def check_if_user_present(username, password, users: List[User]):
-    username_exist = (True for u in users if u.username == username and u.password == password)
+    username_exist = (True for user in users if user.username == username and user.password == password)
     return next(username_exist, False)
 
 
 def get_grades_for_user(username: str, user: User, users: List[User]):
-    user_exist = [usr for usr in users if usr.username == username and
-                  (username == user.username or user.username == "Mentor")]
+    user_exist = next((usr for usr in users if usr.username == username and
+                       (username == user.username or user.username == "Mentor")), None)
     if user_exist:
-        return user_exist[0].score_list
+        return user_exist.score_list
     raise ForbiddenException
 
 
@@ -194,7 +195,7 @@ def subjects_to_json(subjects, json_file):
 
 
 def grades_to_json(users, subjects, json_file):
-    scores_ = []
+    scores = []
     for user in users:
         if isinstance(user, User) and user.score_list:
             for sc in user.score_list:
@@ -202,10 +203,10 @@ def grades_to_json(users, subjects, json_file):
                 get_subject_id = (s.id for s in subjects if s.title == score_data[0][0])
                 subject_id = next(get_subject_id, None)
                 if subject_id:
-                    scores_.append(Score(score_data[0][1], user.id.hex, subject_id.hex))
+                    scores.append(Score(score_data[0][1], user.id.hex, subject_id.hex))
 
     with open(json_file, "w") as f:
-        json.dump(scores_, f, default=lambda o: o.__dict__, indent=4)
+        json.dump(scores, f, default=lambda o: o.__dict__, indent=4)
 
 
 if __name__ == '__main__':
