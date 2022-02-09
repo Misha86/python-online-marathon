@@ -119,7 +119,7 @@ if __name__ == '__main__':
     # worker = Worker("Misha", 100000)
     # print(worker.get_tax_value())
     #
-    unittest.main()
+    unittest.main(verbosity=2)
 
 
 

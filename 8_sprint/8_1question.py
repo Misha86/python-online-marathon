@@ -49,27 +49,31 @@ class CartTest(unittest.TestCase):
 
     def test_not_discount_price(self):
         for count in range(1, 5):
-            self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count)
+            with self.subTest(count=count):
+                self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count)
 
     def test_discount_price_5_percent(self):
         for count in range(5, 7):
-            self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count*0.95)
+            with self.subTest(count=count):
+                self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count*0.95)
 
     def test_discount_price_10_percent(self):
         for count in range(7, 10):
-            self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count*0.90)
+            with self.subTest(count=count):
+                self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10 * count * 0.90)
 
     def test_discount_price_20_percent(self):
         for count in range(10, 19):
-            self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count*0.80)
+            with self.subTest(count=count):
+                self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10 * count * 0.80)
 
     def test_discount_price_30_percent(self):
         count = 20
-        self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count*0.70)
+        self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10 * count * 0.70)
 
     def test_discount_price_50_percent(self):
         count = 21
-        self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10*count*0.50)
+        self.assertEqual(self.cart.discount_price(Product("test", 10, count)), 10 * count * 0.50)
 
     def test_get_total_price(self):
         self.cart.products = [Product("test", 10, 2), Product("test1", 10, 5), Product("test1", 10, 20)]
@@ -90,6 +94,3 @@ if __name__ == '__main__':
     cart = Cart(products)
     print(cart.get_total_price())
     unittest.main()
-
-
-

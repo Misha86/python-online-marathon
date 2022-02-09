@@ -102,19 +102,18 @@ class TriangleTest(unittest.TestCase):
     def test_valid_data(self):
         for data in self.valid_test_data:
             self.triangle.sides = data[0]
-            with self.subTest():
+            with self.subTest(data=data):
                 self.assertAlmostEqual(self.triangle.get_area(), data[1], delta=0.01)
 
     def test_not_exist_triangle(self):
         for data in self.not_valid_triangle:
-            with self.subTest():
+            with self.subTest(data=data):
                 with self.assertRaises(TriangleNotExistException):
                     self.triangle.sides = data
 
     def test_invalid_args(self):
         for data in self.not_valid_arguments:
-
-            with self.subTest():
+            with self.subTest(data=data):
                 with self.assertRaises(TriangleNotValidArgumentException):
                     self.triangle.sides = data
 
@@ -129,4 +128,4 @@ if __name__ == '__main__':
     triangle = Triangle([3, 4, 5])
     print(triangle.get_area())
 
-    unittest.main()
+    unittest.main(verbosity=2)
