@@ -195,18 +195,18 @@ def subjects_to_json(subjects, json_file):
 
 
 def grades_to_json(users, subjects, json_file):
-    scores = []
+    grades = []
     for user in users:
         if isinstance(user, User) and user.score_list:
             for sc in user.score_list:
-                score_data = list(sc.items())
-                get_subject_id = (s.id for s in subjects if s.title == score_data[0][0])
+                user_subj_title, user_subj_score = next(value for value in list(sc.items()))
+                get_subject_id = (sub.id for sub in subjects if sub.title == user_subj_title)
                 subject_id = next(get_subject_id, None)
                 if subject_id:
-                    scores.append(Score(score_data[0][1], user.id.hex, subject_id.hex))
+                    grades.append(Score(user_subj_score, user.id.hex, subject_id.hex))
 
     with open(json_file, "w") as f:
-        json.dump(scores, f, default=lambda o: o.__dict__, indent=4)
+        json.dump(grades, f, default=lambda o: o.__dict__, indent=4)
 
 
 if __name__ == '__main__':
