@@ -67,16 +67,10 @@ class User:
 
     def _set_id(self, id):
         exist_id = [subject.id for subject in self.users if id == subject.id]
-        print(type(uuid.UUID("31abd085e3474ec68fdd182ed9709b0a").hex))
         if id is None and not exist_id:
-            uid = uuid.uuid4()
-            # print(type(uid.hex))
-            # print(type(uuid.UUID().hex))
-            print(type(uuid.UUID(uid.hex).hex))
-            print(uuid.UUID(uid.hex).hex)
-            return uuid.UUID(uid.hex).hex
+            return uuid.UUID(uuid.uuid4().hex)
         else:
-            return uuid.UUID(id).hex
+            return uuid.UUID(id)
 
     def add_score_for_subject(self, subject: Subject, score: Score):
         self.score_list.append({subject.title: score})
@@ -108,6 +102,10 @@ class PasswordValidationException(Exception):
         return self.massage
 
 
+class ForbiddenException(Exception):
+    pass
+
+
 def get_subjects_from_json(subjects_json):
     with open(subjects_json) as s_file:
         subjects = json.load(s_file, object_hook=lambda dct: Subject.create_subject(**dct))
@@ -121,7 +119,7 @@ def get_users_with_grades(users_json, subjects_json, grades_json):
 
     def get_users_grades(dct):
         for user in users:
-            if dct["user_id"] == user.id:
+            if dct["user_id"] == user.id.hex:
                 for subject in subjects:
                     if dct["subject_id"] == subject["id"]:
                         user.add_score_for_subject(Subject(**subject), dct['score'])
@@ -156,29 +154,21 @@ def check_if_user_present(username, password, users: List[User]):
 
 
 def get_grades_for_user(username: str, user: User, users: List[User]):
-    user_exist = (u for u in users if u.username == username)
+    user_exist = [usr for usr in users if usr.username == username and
+                  (username == user.username or user.username == "Mentor")]
     if user_exist:
-        return next(user_exist).score_list
-    else:
-        return user.score_list
+        return user_exist[0].score_list
+    raise ForbiddenException
 
 
 class UserEncoder(json.JSONEncoder):
-    def default(self, o):
-        dct = o.__dict__
-        if 'role' in dct and isinstance(dct['role'], Enum):
-            dct['role'] = dct['role'].value
-        new_o = {key: value for key, value in dct.items() if key != "score_list"}
-        return new_o
-
-
-class GradesEncoder(json.JSONEncoder):
-    def default(self, o):
-        dct = o.__dict__
-        if 'role' in dct and isinstance(dct['role'], Enum):
-            dct['role'] = dct['role'].value
-        new_o = {key: value for key, value in dct.items() if key != "score_list"}
-        return new_o
+    def default(self, user):
+        user.id = user.id.hex
+        dct = user.__dict__
+        if 'role' in dct and isinstance(user.role, Enum):
+            user.role = user.role.value
+        updated_user = {key: value for key, value in dct.items() if key != "score_list"}
+        return updated_user
 
 
 def users_to_json(users, json_file):
@@ -200,13 +190,14 @@ def grades_to_json(users, subjects, json_file):
                 get_subject_id = (s.id for s in subjects if s.title == score_data[0][0])
                 subject_id = next(get_subject_id, None)
                 if subject_id:
-                    scores_.append(Score(score_data[0][1], user.id, subject_id))
+                    scores_.append(Score(score_data[0][1], user.id.hex, subject_id))
 
     with open(json_file, "w") as f:
         json.dump(scores_, f, default=lambda o: o.__dict__, indent=4)
 
 
 if __name__ == '__main__':
-    user = User.create_user("Name", "6_Vow&", Role.Trainee)
-    print(type(user.id).__name__)
-
+    users = get_users_with_grades("users.json", "subjects.json", "grades.json")
+    mentor = User.create_user("Mentor", "!1qQ456", Role.Mentor)
+    add_user(mentor, users)
+    print(get_grades_for_user("Mentor", users[1], users))
