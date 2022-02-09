@@ -98,7 +98,7 @@ class WorkerTest(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_validate_salary(self):
-        self.worker.salary = -1000
+        self.assertLess(self.worker.salary, 0)
 
     def test_salary_property(self):
         self.assertEqual(self.worker.salary, 100000)
@@ -107,7 +107,7 @@ class WorkerTest(unittest.TestCase):
         self.assertEqual(self.worker.get_tax_value(), 40050.0)
 
     def test_salary_property_mock(self):
-        with patch('__main__.Worker.salary', new_callable=PropertyMock) as mock_salary:
+        with patch.object(Worker, 'salary', new_callable=PropertyMock) as mock_salary:
             mock_salary.return_value = 1000
             self.assertEqual(self.worker.salary, 1000)
 

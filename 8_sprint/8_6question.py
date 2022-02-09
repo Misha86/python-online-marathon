@@ -39,7 +39,7 @@ class ParserTest(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_file_exist(self):
-        self.file_parser("not_exist_file.txt", "string")
+        self.assertEqual(self.file_parser("not_exist_file.txt", "string"), "Found 2 strings")
 
     @patch("__main__.file_parser", return_value=f"Found 3 strings")
     def test_file_parser(self, parser_mock):
