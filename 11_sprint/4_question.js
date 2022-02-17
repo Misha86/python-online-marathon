@@ -2,7 +2,7 @@
 
 const sumOfLen = (...words) => {
     let result = words ? words.reduce((total, word) => total + word.length, 0): 0;
-    return result
+    return result;
 }
 
 	
