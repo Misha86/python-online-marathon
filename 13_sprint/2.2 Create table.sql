@@ -1,0 +1,3 @@
+CREATE TABLE CUSTOMERS (ID INT PRIMARY KEY, 
+                        FIRSTNAME VARCHAR(30), 
+                        LASTNAME VARCHAR(30));

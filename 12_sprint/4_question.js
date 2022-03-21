@@ -25,7 +25,7 @@ class Student {
 }
 
 let stud1 = new Student("Ivan Petrenko", "web");
-let stud2 = new Student("Sergiy Koval", "python");
+let stud2 = new Student("Sergiy Koval", "python");  
 let stud3 = Student.studentBuilder();
 
 console.log(stud1.showFullName()); 
